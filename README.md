@@ -1,9 +1,10 @@
 # timeline
 
-## Project setup
+## Download and install
 
 ```
 git clone https://github.com/geocolumbus/timeline.git
+npm install
 ```
 
 ### Install data
@@ -11,14 +12,7 @@ git clone https://github.com/geocolumbus/timeline.git
 Install couch database at 127.0.0.1:5984 and create a database called timeline.
 
 ```
-cd data-loader
-./import.sh
-```
-
-### Install
-
-```
-npm install
+npm run install
 ```
 
 ### Compiles and hot-reloads for development

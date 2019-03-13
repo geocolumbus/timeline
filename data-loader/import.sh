@@ -3,7 +3,7 @@
 COUCH_URL="http://127.0.0.1:5984"
 COUCH_DB="timeline"
 COUCH_DELIMETER=","
-FILE="data/master-timeline.csv"
+FILE="data-loader/master-timeline.csv"
 
 dbdata=`curl -X GET http://localhost:5984/timeline`
 
