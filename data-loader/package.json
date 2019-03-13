@@ -1,0 +1,16 @@
+{
+  "name": "data-loader",
+  "version": "1.0.0",
+  "description": "Load timeline csv file into couchDB local node",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "gecolumbus@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "couchimport": "^1.1.2",
+    "install": "^0.12.2",
+    "npm": "^6.9.0"
+  }
+}
