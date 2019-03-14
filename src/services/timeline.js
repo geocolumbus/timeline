@@ -8,7 +8,7 @@ const couch = new NodeCouchDb({
 
 const dbName = "timeline"
 
-const generalSearch = function (queryParams) {
+const _generalSearch = async function (queryParams) {
     const year = queryParams.year
     const month = queryParams.month
     const day = queryParams.day
@@ -23,7 +23,7 @@ const generalSearch = function (queryParams) {
         }
     }
 
-    const mangoQuery = {selector:{}}
+    const mangoQuery = {selector: {}}
 
     if (eventRegex) {
         mangoQuery.selector.event = {"$regex": eventRegex}
@@ -38,20 +38,20 @@ const generalSearch = function (queryParams) {
         mangoQuery.selector.day = day
     }
 
-    console.log(JSON.stringify(mangoQuery, null, 4))
+    // console.log(JSON.stringify(mangoQuery, null, 4))
 
     const parameters = {}
 
-    return new Promise((resolve, reject) => {
-        couch.mango(dbName, mangoQuery, parameters).then(({data, headers, status}) => {
-            resolve(data.docs ? data.docs : [])
-        }, err => {
-            reject(err)
-        })
+    const result = await couch.mango(dbName, mangoQuery, parameters).then(({data, headers, status}) => {
+        return data.docs ? data.docs : []
+    }, err => {
+        return err
     })
-}
 
-generalSearch({
+    return result
+}
+/*
+_generalSearch({
     year: "1776",
     search: "george"
 
@@ -65,3 +65,8 @@ generalSearch({
     .catch(err => {
         console.log(err)
     })
+    */
+
+export default {
+    generalSearch: _generalSearch
+}
