@@ -19,3 +19,9 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+# Vue
+/www/*
+
+# node
+/package-lock.json
