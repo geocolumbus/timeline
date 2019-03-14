@@ -1,7 +1,7 @@
 const NodeCouchDb = require("node-couchdb")
 
 const couch = new NodeCouchDb({
-    host: "localhost",
+    host: "127.0.0.1",
     protocol: "http",
     port: 5984
 })

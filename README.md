@@ -9,7 +9,8 @@ npm install
 
 ### Install data
 
-Install couch database at 127.0.0.1:5984 and create a database called timeline.
+* Install couch database at 127.0.0.1:5984 and create a database called timeline.
+* Enable CORS
 
 ```
 npm run import
