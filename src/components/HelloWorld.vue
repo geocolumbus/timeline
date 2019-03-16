@@ -60,10 +60,24 @@
                 }
                 this.scrollTimer = setTimeout(() => {
                     const percentScrolled = 100.0 * ((e.target.scrollTop + e.target.offsetHeight) / e.target.scrollHeight)
-                    if (percentScrolled > 80) {
-                        console.log("load next set of data!")
+                    if (percentScrolled > 20) {
+                        this.loadNextSetOfData()
                     }
                 }, 500)
+            },
+            loadNextSetOfData: async function () {
+                if (this.bookmark) {
+                    const data = await timeline.generalSearch({
+                        search: this.keywords,
+                        bookmark: this.bookmark
+                    })
+                    if (data.docs.length > 0) {
+                        this.items = this.items.concat(data.docs)
+                        this.bookmark = data.bookmark
+                    } else {
+                        this.bookmark=null
+                    }
+                }
             }
         },
         watch: {
@@ -78,7 +92,6 @@
                     const data = await timeline.generalSearch({
                         search: this.keywords
                     })
-
                     this.items = data.docs
                     this.bookmark = data.bookmark
                 }, 750)
