@@ -10,8 +10,8 @@
             </v-layout>
         </v-flex>
 
-        <v-flex id="scroller" class="results">
-            <v-layout column fill-height v-scroll:#scroller="handleScroll">
+        <v-flex id="scroller" class="results" v-scroll:#scroller="handleScroll">
+            <v-layout column fill-height>
                 <v-flex shrink v-for="item in items" :key="item._id">
                     <v-layout row flat>
                         <v-flex xs12 class="item-container">
@@ -38,6 +38,7 @@
                 bookmark: null,
                 items: [],
                 keywords: "",
+                scrollTimer: null,
                 timer: null
             }
         },
@@ -54,7 +55,15 @@
                 return item ? Math.abs(item) > 9999 ? numeral(item).format("0,0") : numeral(item).format("0") : "xxxx"
             },
             handleScroll: function (e) {
-                console.log(e)
+                if (this.scrollTimer) {
+                    window.clearTimeout(this.scrollTimer)
+                }
+                this.scrollTimer = setTimeout(() => {
+                    const percentScrolled = 100.0 * ((e.target.scrollTop + e.target.offsetHeight) / e.target.scrollHeight)
+                    if (percentScrolled > 80) {
+                        console.log("load next set of data!")
+                    }
+                }, 500)
             }
         },
         watch: {
