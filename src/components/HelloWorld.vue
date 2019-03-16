@@ -6,31 +6,20 @@
                 <v-flex xs4>Search
                     <v-text-field v-model="keywords"></v-text-field>
                 </v-flex>
-                <v-flex xs1></v-flex>
-                <v-flex xs7>
-                    <v-layout row>
-                        <v-flex xs2>Start Year
-                            <v-text-field v-model="startYear"></v-text-field>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row>
-                        <v-flex xs2>End Year
-                            <v-text-field v-model="endYear"></v-text-field>
-                        </v-flex>
-                    </v-layout>
-                </v-flex>
+                <v-flex xs8></v-flex>
             </v-layout>
         </v-flex>
 
-        <v-flex class="results">
-            <v-layout column fill-height>
+        <v-flex id="scroller" class="results">
+            <v-layout column fill-height v-scroll:#scroller="handleScroll">
                 <v-flex shrink v-for="item in items" :key="item._id">
-                    <v-divider></v-divider>
-                    <v-layout row flat pt-1 pb-1>
-                        <v-flex text-xs-center xs2>
-                            {{formatYear(item.year)}}{{formatMonth(item.month)}}{{formatDay(item.day)}}
+                    <v-layout row flat>
+                        <v-flex xs12 class="item-container">
+                            <div class="date-column">
+                                {{formatYear(item.year)}}{{formatMonth(item)}}{{formatDay(item)}}
+                            </div>
+                            <div class="event-column">{{item.event}}</div>
                         </v-flex>
-                        <v-flex xs10>{{item.event}}</v-flex>
                     </v-layout>
                 </v-flex>
             </v-layout>
@@ -47,22 +36,25 @@
         data: function () {
             return {
                 bookmark: null,
-                endYear: "",
                 items: [],
                 keywords: "",
-                startYear: "",
                 timer: null
             }
         },
         methods: {
             formatMonth: function (item) {
-                return item ? "-" + numeral(item).format("00") : "-xx"
+                const filler = item.year > -10000 ? "-xx" : ""
+                return item.month ? "-" + numeral(item.month).format("00") : filler
             },
             formatDay: function (item) {
-                return item ? "-" + numeral(item).format("00") : "-xx"
+                const filler = item.year > -10000 ? "-xx" : ""
+                return item.day ? "-" + numeral(item.day).format("00") : filler
             },
             formatYear: function (item) {
                 return item ? Math.abs(item) > 9999 ? numeral(item).format("0,0") : numeral(item).format("0") : "xxxx"
+            },
+            handleScroll: function (e) {
+                console.log(e)
             }
         },
         watch: {
@@ -94,5 +86,28 @@
     .results {
         overflow-x: hidden;
         overflow-y: scroll;
+    }
+
+    .date-column {
+        width: 120px;
+        float: left;
+        border-top: thin solid grey;
+        text-align: center;
+        font-family: "Andale Mono";
+        font-weight: bold;
+        padding-top: 4px;
+    }
+
+    .event-column {
+        width: calc(100% - 120px);
+        float: left;
+        padding: 4px;
+        border-top: thin solid grey;
+        border-left: thin solid grey;
+    }
+
+    .item-container {
+        border-left: thin solid grey;
+        border-right: thin solid grey;
     }
 </style>
