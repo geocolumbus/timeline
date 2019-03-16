@@ -13,6 +13,7 @@ const _generalSearch = async function (queryParams) {
     const month = queryParams.month
     const day = queryParams.day
     const searchString = queryParams.search
+    const bookmark = queryParams.bookmark
 
     let eventRegex
     if (searchString) {
@@ -25,7 +26,8 @@ const _generalSearch = async function (queryParams) {
 
     const mangoQuery = {
         selector: {},
-        sort: ["year", "month", "day"]
+        sort: ["year", "month", "day"],
+        limit: 20
     }
 
     if (eventRegex) {
@@ -40,14 +42,18 @@ const _generalSearch = async function (queryParams) {
     if (day) {
         mangoQuery.selector.day = day
     }
+    if (bookmark) {
+        mangoQuery.selector.bookmark = bookmark
+    }
 
-    console.log(JSON.stringify(mangoQuery, null, 4))
+    // console.log(JSON.stringify(mangoQuery, null, 4))
 
     const parameters = {}
 
     const result = await couch.mango(dbName, mangoQuery, parameters).then(({data, headers, status}) => {
-        console.log(JSON.stringify(data, null, 4))
-        return data.docs ? data.docs : []
+        // console.log(`${data.docs.length} items returned.`)
+        // console.log(JSON.stringify(data.bookmark, null, 4))
+        return status === 200 && data.docs ? data : {data: []}
     }, err => {
         return err
     })

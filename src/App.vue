@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-content>
+        <v-content class="window-height">
             <HelloWorld></HelloWorld>
         </v-content>
     </v-app>
@@ -16,3 +16,11 @@
         }
     }
 </script>
+
+<style>
+    .window-height {
+        max-height: calc(100vh - 30px);
+        overflow: hidden;
+        margin: 10px;
+    }
+</style>
