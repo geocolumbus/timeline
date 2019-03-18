@@ -27,7 +27,7 @@ const _generalSearch = async function (queryParams) {
     const mangoQuery = {
         selector: {},
         sort: ["year", "month", "day"],
-        limit: 100
+        limit: 200
     }
 
     if (eventRegex) {

@@ -60,7 +60,7 @@
                 }
                 this.scrollTimer = setTimeout(() => {
                     const percentScrolled = 100.0 * ((e.target.scrollTop + e.target.offsetHeight) / e.target.scrollHeight)
-                    if (percentScrolled > 20) {
+                    if (percentScrolled > 80) {
                         this.loadNextSetOfData()
                     }
                 }, 500)
@@ -111,7 +111,7 @@
     }
 
     .date-column {
-        width: 120px;
+        width: 130px;
         float: left;
         border-top: thin solid grey;
         text-align: center;
@@ -121,7 +121,7 @@
     }
 
     .event-column {
-        width: calc(100% - 120px);
+        width: calc(100% - 130px);
         float: left;
         padding: 4px;
         border-top: thin solid grey;
