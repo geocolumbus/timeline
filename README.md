@@ -16,6 +16,22 @@ npm install
 npm run import
 ```
 
+You will need to create a search index
+
+```
+{
+   "index": {
+      "fields": [
+         "year",
+         "month",
+         "day"
+      ]
+   },
+   "name": "year-month-day-index",
+   "type": "json"
+}
+```
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
