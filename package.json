@@ -13,7 +13,7 @@
     "numeral": "^2.0.6",
     "vue": "^2.6.6",
     "vue-scroll": "^2.1.9",
-    "vuetify": "^1.5.5"
+    "vuetify": "^1.5.7"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",

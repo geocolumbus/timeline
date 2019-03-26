@@ -13,14 +13,7 @@
         <v-flex id="scroller" class="results" v-scroll:#scroller="handleScroll">
             <v-layout column fill-height>
                 <v-flex shrink v-for="item in items" :key="item._id">
-                    <v-layout row flat>
-                        <v-flex xs12 class="item-container">
-                            <div class="date-column">
-                                {{formatYear(item.year)}}{{formatMonth(item)}}{{formatDay(item)}}
-                            </div>
-                            <div class="event-column">{{item.event}}</div>
-                        </v-flex>
-                    </v-layout>
+                    <event :item="item"></event>
                 </v-flex>
             </v-layout>
         </v-flex>
@@ -30,9 +23,12 @@
 
 <script>
     import timeline from "../services/timeline"
-    import numeral from "numeral"
+    import event from "./Event"
 
     export default {
+        components: {
+            event: event
+        },
         data: function () {
             return {
                 bookmark: null,
@@ -43,17 +39,6 @@
             }
         },
         methods: {
-            formatMonth: function (item) {
-                const filler = item.year > -10000 ? "-xx" : ""
-                return item.month ? "-" + numeral(item.month).format("00") : filler
-            },
-            formatDay: function (item) {
-                const filler = item.year > -10000 ? "-xx" : ""
-                return item.day ? "-" + numeral(item.day).format("00") : filler
-            },
-            formatYear: function (item) {
-                return item ? Math.abs(item) > 9999 ? numeral(item).format("0,0") : numeral(item).format("0") : "xxxx"
-            },
             handleScroll: function (e) {
                 if (this.scrollTimer) {
                     window.clearTimeout(this.scrollTimer)
@@ -75,7 +60,7 @@
                         this.items = this.items.concat(data.docs)
                         this.bookmark = data.bookmark
                     } else {
-                        this.bookmark=null
+                        this.bookmark = null
                     }
                 }
             }
@@ -108,28 +93,5 @@
     .results {
         overflow-x: hidden;
         overflow-y: scroll;
-    }
-
-    .date-column {
-        width: 130px;
-        float: left;
-        border-top: thin solid grey;
-        text-align: center;
-        font-family: "Andale Mono";
-        font-weight: bold;
-        padding-top: 4px;
-    }
-
-    .event-column {
-        width: calc(100% - 130px);
-        float: left;
-        padding: 4px;
-        border-top: thin solid grey;
-        border-left: thin solid grey;
-    }
-
-    .item-container {
-        border-left: thin solid grey;
-        border-right: thin solid grey;
     }
 </style>
