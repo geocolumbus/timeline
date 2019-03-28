@@ -38,16 +38,12 @@
                 return item ? Math.abs(item) > 9999 ? numeral(item).format("0,0") : numeral(item).format("0") : "xxxx"
             },
             loadItems: async function () {
-                const nextItems = await timeline.getNext({
-                    id: this.item._id,
-                    count: 10
+                const monthItems = await timeline.getMonth({
+                    item: this.item
                 })
-                const prevItems = await timeline.getPrev({
-                    id: this.item._id,
-                    count: 10
+                monthItems.docs.forEach(doc => {
+                    console.log(`${doc.year}-${doc.month ? doc.month : "xx"}-${doc.day ? doc.day : "xx"} ${doc.event.substring(0, 64)}`)
                 })
-                console.log(nextItems)
-                console.log(prevItems)
             }
         }
     }
