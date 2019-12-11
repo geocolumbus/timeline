@@ -3,7 +3,7 @@
         <v-layout row flat>
             <v-flex xs12 class="item-container">
                 <div class="icon-column">
-                    <v-btn fab small color="primary" v-ripple @click="loadItems">
+                    <v-btn v-if="!item.subEvent && !this.expanded" fab small color="primary" v-ripple @click="loadItems">
                         <v-icon>unfold_more</v-icon>
                     </v-btn>
                 </div>
@@ -25,6 +25,11 @@
         props: {
             item: Object
         },
+        data() {
+            return {
+                expanded: false
+            }
+        },
         methods: {
             formatMonth: function (item) {
                 const filler = item.year > -10000 ? "-xx" : ""
@@ -38,12 +43,20 @@
                 return item ? Math.abs(item) > 9999 ? numeral(item).format("0,0") : numeral(item).format("0") : "xxxx"
             },
             loadItems: async function () {
-                const monthItems = await timeline.getMonth({
+                if (this.expanded) {
+                    return
+                } else {
+                    this.expanded = true
+                }
+                let nearbyItems = await timeline.getMonth({
                     item: this.item
                 })
-                monthItems.docs.forEach(doc => {
-                    console.log(`${doc.year}-${doc.month ? doc.month : "xx"}-${doc.day ? doc.day : "xx"} ${doc.event.substring(0, 64)}`)
-                })
+                if (nearbyItems.docs.length < 10) {
+                    nearbyItems = await timeline.getYear({
+                        item: this.item
+                    })
+                }
+                this.$emit("addEvents", nearbyItems.docs)
             }
         }
     }

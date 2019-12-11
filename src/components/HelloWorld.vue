@@ -13,7 +13,7 @@
         <v-flex id="scroller" class="results" v-scroll:#scroller="handleScroll">
             <v-layout column fill-height>
                 <v-flex shrink v-for="item in items" :key="item._id">
-                    <event :item="item"></event>
+                    <event v-on:addEvents="addEventsHandler" :item="item"></event>
                 </v-flex>
             </v-layout>
         </v-flex>
@@ -35,7 +35,8 @@
                 items: [],
                 keywords: "",
                 scrollTimer: null,
-                timer: null
+                timer: null,
+                fromEvent: []
             }
         },
         methods: {
@@ -63,7 +64,38 @@
                         this.bookmark = null
                     }
                 }
+            },
+            addEventsHandler: function (_newItems) {
+                console.log(`Adding ${_newItems.length} subevents`)
+                const newItems = []
+                for (let i = 0; i < _newItems.length; i++) {
+                    newItems[i] = _newItems[i]
+                    newItems[i].subEvent = true
+                }
+                const _items1 = this.items.concat(newItems).sort((a, b) => {
+                    if (a.year > b.year) return 1
+                    if (a.year < b.year) return -1
+                    if (a.month > b.month) return 1
+                    if (a.month < b.month) return -1
+                    if (a.day > b.day) return 1
+                    if (a.day < b.day) return -1
+                    return 0
+                })
+                const _items2 = []
+                for (let i = 0; i < _items1.length; i++) {
+                    for (let j = i + 1; j < _items1.length; j++) {
+                        if (_items1[j].subEvent && _items1[i]._id === _items1[j]._id) {
+                            _items1[j].remove = true
+                            _items1[i].subEvent = true
+                        }
+                    }
+                    if (!_items1[i].remove) {
+                        _items2.push(_items1[i])
+                    }
+                }
+                this.items = _items2
             }
+
         },
         watch: {
             keywords: function () {

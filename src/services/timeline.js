@@ -1,4 +1,5 @@
 const NodeCouchDb = require("node-couchdb")
+const indexId = "_design/818e79efd94a790ac6263d5348256b951eaa4798"
 
 const couch = new NodeCouchDb({
     host: "127.0.0.1",
@@ -23,7 +24,7 @@ const _generalSearch = async function (queryParams) {
 
     const mangoQuery = {
         selector: {},
-        use_index: "_design/818e79efd94a790ac6263d5348256b951eaa4798",
+        use_index: indexId,
         limit: 100
     }
 
@@ -46,34 +47,59 @@ const _generalSearch = async function (queryParams) {
 }
 
 /**
- * Find X number of items chronologically after a specific item
+ * Return all the events for a given month
+ * @param queryParams
+ * @returns {Promise<{data: Array}|any[]|*>}
+ * @private
+ */
+const _getMonth = async function (queryParams) {
+
+    const mangoQuery = {
+        selector: {
+            year: {"$eq": queryParams.item.year},
+            month: {"$eq": queryParams.item.month},
+            day: {"$gt": 0}
+        },
+        use_index: indexId,
+        limit: 1000
+    }
+
+    const result = await couch.mango(dbName, mangoQuery, {}).then(({data, headers, status}) => {
+        return status === 200 && data.docs ? data : {data: []}
+    }, err => {
+        return err
+    })
+
+    return result
+}
+
+/**
+ * Return all the events for a given year
  * @param queryParams
  * @returns {Promise<void>}
  * @private
  */
 const _getYear = async function (queryParams) {
 
-    return new Promise(async (resolve, reject) => {
+    const mangoQuery = {
+        selector: {
+            year: {"$eq": queryParams.item.year}
+        },
+        use_index: indexId,
+        limit: 1000
+    }
 
-        const mangoQuery = {
-            selector: {
-                year: {"$eq": queryParams.item.year}
-            },
-            use_index: "_design/818e79efd94a790ac6263d5348256b951eaa4798",
-            limit: 1000
-        }
-
-        const result = await couch.mango(dbName, mangoQuery, {}).then(({data, headers, status}) => {
-            return status === 200 && data.docs ? data : {data: []}
-        }, err => {
-            return err
-        })
-
-        return result
+    const result = await couch.mango(dbName, mangoQuery, {}).then(({data, headers, status}) => {
+        return status === 200 && data.docs ? data : {data: []}
+    }, err => {
+        return err
     })
+
+    return result
 }
 
 export default {
     generalSearch: _generalSearch,
+    getMonth: _getMonth,
     getYear: _getYear
 }
